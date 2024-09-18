@@ -1,0 +1,14 @@
+spin_manifest_version = 2
+
+[application]
+name = "rust"
+version = "0.1.0"
+authors = ["Mikkel Mørk Hegnhøj <mikkel@fermyon.com>"]
+description = ""
+
+[[trigger.http]]
+route = "/..."
+component = "rust"
+
+[component.rust]
+source = { registry = "ttl.sh", package = "mikkelhegn:my-wasi", version = "0.0.1" }

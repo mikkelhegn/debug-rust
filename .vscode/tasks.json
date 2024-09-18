@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cargo",
+			"command": "component",
+			"args": [
+				"build", 
+				"--target",
+				"wasm32-wasi"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust: cargo component build"
+		},
+		{
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"component",
+				"build",
+				"--target",
+				"wasm32-wasi"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"label": "Spin debug build"
+		}
+	]
+}
