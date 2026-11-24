@@ -5,16 +5,48 @@
 			"type": "shell",
 			"command": "cargo",
 			"args": [
-				"component",
 				"build",
 				"--target",
-				"wasm32-wasi"
+				"wasm32-wasip2"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"label": "Spin debug build"
+		},
+		{
+			// Starts the app for debugging; stays running as a background task.
+			// Signals "ready" (so the debugger can attach) once Spin prints "Serving http...".
+			"type": "shell",
+			"command": "spin",
+			"args": [
+				"up",
+				"--debug-info",
+				"--disable-pooling"
+			],
+			"dependsOn": [
+				"Spin debug build"
+			],
+			"isBackground": true,
+			"problemMatcher": {
+				// Dummy pattern; this matcher exists only for the `background`
+				// section, which signals readiness to the debugger.
+				"pattern": [
+					{
+						"regexp": "^$",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": "Serving http"
+				}
+			},
+			"label": "Spin up (debug)"
 		}
 	]
 }

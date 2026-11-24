@@ -3,11 +3,7 @@
 {
 	"name": "Rust",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
-	"features": {
-		"devwasm.azurecr.io/dev-wasm/dev-wasm-feature/wasmtime-wasi:0": {},
-		"ghcr.io/lee-orr/rusty-dev-containers/fermyon-spin:0": {}
-	},
+	"image": "mcr.microsoft.com/devcontainers/rust:2-1-trixie",
 
 	// Use 'mounts' to make the cargo cache persistent in a Docker Volume.
 	// "mounts": [
@@ -18,17 +14,25 @@
 	// 	}
 	// ]
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	// "forwardPorts": [3000],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cargo install cargo-component --locked"
+	// Installs the Rust wasm targets, wasmtime, the Spin CLI, and debugging tools (gdb).
+	"postCreateCommand": "bash .devcontainer/setup.sh",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				// Rust language support
+				"rust-lang.rust-analyzer",
+				// CodeLLDB: used by the "Debug Spin App" / lldb launch configs
+				"vadimcn.vscode-lldb",
+				// C/C++ (cppdbg): used by the "Attach to Spin trigger (gdb)" launch config
+				"ms-vscode.cpptools"
+			]
+		}
+	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

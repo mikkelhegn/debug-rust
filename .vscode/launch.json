@@ -5,20 +5,69 @@
     "version": "0.2.0",
     "configurations": [
         {
+            // One-click: builds, starts `spin up --debug-info`, then auto-attaches
+            // to the `spin trigger http` child process where the guest runs.
             "type": "lldb",
             "request": "launch",
-            "name": "Debug",
-            "program": "wasmtime",
-            "args": [
-                "serve",
-                "-S",
-                "common",
-                "-D",
-                "debug-info=y",
-                "target/wasm32-wasi/debug/rust.wasm"
+            "name": "Start and Attach (lldb)",
+            "sourceLanguages": [
+                "rust"
             ],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Spin debug build"
+            "initCommands": [
+                "settings set plugin.jit-loader.gdb.enable on"
+            ],
+            "targetCreateCommands": [
+                "target create /usr/local/bin/spin"
+            ],
+            "processCreateCommands": [
+                "script import subprocess; lldb.debugger.HandleCommand('process attach --pid ' + subprocess.check_output(['pgrep', '-n', '-f', 'spin trigger http']).decode().strip())"
+            ],
+            "preLaunchTask": "Spin up (debug)"
+        },
+        {
+            // Alternative using gdb (requires `gdb` and the ms-vscode.cpptools
+            // extension). gdb evaluates Wasmtime's guest debug info better than
+            // lldb. Once stopped in guest code (on the tokio-rt-worker thread),
+            // run these in the Debug Console. The `-exec` prefix is required;
+            // without it the expression goes to VS Code's variable evaluator:
+            //   -exec set language c++
+            //   -exec call __vmctx->set()
+            //   -exec set language rust
+            // after which pointer/string values print correctly. Print
+            // individual fields (e.g. `-exec print req.head.uri`): printing a
+            // whole `Request` segfaults GDB, so setupCommands below limit
+            // print depth to keep the Variables panel from triggering that.
+            // EXPERIMENTAL: not yet verified inside VS Code; the terminal
+            // workflow in README.md is the confirmed path.
+            // In the process picker, choose the process whose command line is
+            // `spin trigger http ...` (NOT `spin up`).
+            "type": "cppdbg",
+            "request": "attach",
+            "name": "Start and Attach (gdb)",
+            "program": "/usr/local/bin/spin",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            // cppdbg can't detect the debuggee architecture when attaching to
+            // spin; set it explicitly (use "x64" on x86_64 hosts).
+            "targetArchitecture": "arm64",
+            "preLaunchTask": "Spin up (debug)",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Limit print depth so large guest structs don't crash gdb",
+                    "text": "-gdb-set print max-depth 1",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Limit printed elements",
+                    "text": "-gdb-set print elements 64",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

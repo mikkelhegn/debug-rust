@@ -1,0 +1,14 @@
+{
+  "features": {
+    "devwasm.azurecr.io/dev-wasm/dev-wasm-feature/wasmtime-wasi:0": {
+      "version": "0.0.16",
+      "resolved": "devwasm.azurecr.io/dev-wasm/dev-wasm-feature/wasmtime-wasi@sha256:ae4e7382b6ee0897d71d8d748152301e3898dd8cf2bd6d4228b3ebfb59414f87",
+      "integrity": "sha256:ae4e7382b6ee0897d71d8d748152301e3898dd8cf2bd6d4228b3ebfb59414f87"
+    },
+    "ghcr.io/lee-orr/rusty-dev-containers/fermyon-spin:0": {
+      "version": "0.1.8",
+      "resolved": "ghcr.io/lee-orr/rusty-dev-containers/fermyon-spin@sha256:e5ca367f3c812da4edcb24ba02fef5e7b4861204da8fd925e0aebd9c895a4b3d",
+      "integrity": "sha256:e5ca367f3c812da4edcb24ba02fef5e7b4861204da8fd925e0aebd9c895a4b3d"
+    }
+  }
+}

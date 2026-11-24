@@ -1,3 +1,5 @@
+#:schema https://schemas.spinframework.dev/spin/manifest-v2/latest.json
+
 spin_manifest_version = 2
 
 [application]
@@ -11,4 +13,8 @@ route = "/..."
 component = "rust"
 
 [component.rust]
-source = { registry = "ttl.sh", package = "mikkelhegn:my-wasi", version = "0.0.1" }
+source = "target/wasm32-wasip2/debug/rust.wasm"
+allowed_outbound_hosts = []
+[component.rust.build]
+command = "cargo build --target wasm32-wasip2"
+watch = ["src/**/*.rs", "Cargo.toml"]
