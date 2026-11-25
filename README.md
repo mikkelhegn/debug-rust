@@ -1,3 +1,6 @@
+Superseeded by: https://github.com/radu-matei/spin-rust-debug
+
+
 # Debugging a Rust Spin App (Wasm) in VS Code
 
 This repository is a minimal [Spin](https://spinframework.dev) HTTP application written in Rust, set up so you can set breakpoints in the Rust guest code and step through it while it runs as a WebAssembly component inside Wasmtime.
